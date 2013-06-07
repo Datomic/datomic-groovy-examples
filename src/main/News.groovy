@@ -3,7 +3,9 @@ import datomic.Util;
 
 class News {
   static rnd = new Random();
-
+  static {
+    datomic.query.EntityMap.metaClass.getAt {String k -> delegate.get(k) }
+  }
   static findAll(db, attr) {
     Peer.q("[:find ?e :in \$ ?attr :where [?e ?attr]]", db, attr)*.get(0);                
   }

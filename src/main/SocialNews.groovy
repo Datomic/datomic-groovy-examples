@@ -13,7 +13,7 @@ newUserId = tempid();
 
 // create data to upvote all stories
 upvoteAllStories = allStories.collect {
-  [":db/add", newUserId, ":user/upVotes", it.get(":db/id")]
+  [":db/add", newUserId, ":user/upVotes", it[":db/id"]]
 }
 
 // create data for a new user
@@ -48,20 +48,20 @@ johnUpvotesGraham = qe("""[:find ?story
                            :where [?user :user/upVotes ?story]
                                   [?story :story/url ?title]]""",
                        dbval,
-                       john.get(":db/id"),
+                       john[":db/id"],
                        "http://www.paulgraham.com/avg.html");
 
 //retract that upvote
 conn.transact([[":db/retract", 
-                john.get(":db/id"), 
+                john[":db/id"], 
                 ":user/upVotes",
                 johnUpvotesGraham.get(":db/id")]]).get();
 
 // get more recent view of John
-john = conn.db().entity(john.get(":db/id"));
+john = conn.db().entity(john[":db/id"]);
 
 // now only two upvotes
-john.get(":user/upVotes");
+john[":user/upVotes"];
 
 // prepare to retract all John's upvotes
 // use a query to make transaction data
@@ -70,11 +70,15 @@ retractUpvotes = q("""[:find ?op ?e ?a ?v
                        :where [?e ?a ?v]]""",
                    conn.db(),
                    ":db/retract",
-                   john.get(":db/id"),
+                   john[":db/id"],
                    ":user/upVotes");
 
 // retract the upvotes
 conn.transact(retractUpvotes.asList()).get();
 
 // and now they are gone
-john = conn.db().entity(john.get(":db/id")).get(":user/upVotes");
+john = conn.db().entity(john[":db/id"])[":user/upVotes"];
+
+
+
+
