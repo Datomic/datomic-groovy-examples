@@ -1,0 +1,17 @@
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://clojars.org/repo"
+    }
+}
+
+dependencies {
+    compile 'com.datomic:datomic-free:0.8.3971'
+}
+
+task(classpath) {
+    println sourceSets.main.runtimeClasspath.asPath
+}
