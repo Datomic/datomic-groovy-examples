@@ -8,5 +8,5 @@ then
     gradle -q classpath >bin/classpath
 fi
 
-groovysh -cp src/main:resources/main:`echo bin/classpath`
+groovysh -cp src/main:resources/main:`cat bin/classpath`
 

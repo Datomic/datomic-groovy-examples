@@ -3,6 +3,7 @@ apply plugin: 'groovy'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url "http://clojars.org/repo"
     }
