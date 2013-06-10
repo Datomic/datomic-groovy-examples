@@ -1,24 +1,24 @@
 import datomic.Peer;
 
-uri = "datomic:mem://hello";
+uri = 'datomic:mem://hello';
 Peer.createDatabase(uri);
 conn = Peer.connect(uri);
 
-tempid = { Peer.tempid("db.part/user") }
+tempid = { Peer.tempid('db.part/user') }
 
-txresult = conn.transact([[":db/add", tempid(), ":db/doc", "Hello world"]]);
+txresult = conn.transact([[':db/add', tempid(), ':db/doc', 'Hello world']]);
 txresult.get();
 
 dbval = conn.db();
 
-qresult = Peer.q("""[:find ?e
-                     :in \$ ?str
-                     :where [?e :db/doc ?str]]""",
+qresult = Peer.q('''[:find ?e
+                     :in $ ?str
+                     :where [?e :db/doc ?str]]''',
                  dbval,
-                 "Hello world");
+                 'Hello world');
 
 ent = dbval.entity(qresult[0][0]);
 ent.touch();
 
-docEnt = dbval.entity(":db/doc");
+docEnt = dbval.entity(':db/doc');
 docEnt.touch();

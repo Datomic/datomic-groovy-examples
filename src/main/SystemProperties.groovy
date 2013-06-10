@@ -1,23 +1,23 @@
 import static datomic.Peer.q;
 
-q("[:find ?k :in [[?k]]]",
+q('[:find ?k :in [[?k]]]',
   System.getProperties());
 
-q("""[:find ?k 
+q('''[:find ?k 
       :in [[?k ?v]]
-      :where [(.endsWith ^String ?k "path")]]""",
+      :where [(.endsWith ^String ?k 'path')]]''',
   System.getProperties());
 
-q("""[:find ?pathElem 
+q('''[:find ?pathElem 
       :in [[?k ?v]]
-      :where [(.endsWith ^String ?k "path")]
-             [(.split ^String ?v ":") [?pathElem ...]]]""",
+      :where [(.endsWith ^String ?k 'path')]
+             [(.split ^String ?v ':') [?pathElem ...]]]''',
   System.getProperties());
 
-q("""[:find ?pathElem 
+q('''[:find ?pathElem 
       :in [[?k ?v]]
-      :where [(.endsWith ^String ?k "path")]
-             [(.split ^String ?v ":") [?pathElem ...]]
-             [(.endsWith ^String ?pathElem "jar")]]""",
+      :where [(.endsWith ^String ?k 'path')]
+             [(.split ^String ?v ':') [?pathElem ...]]
+             [(.endsWith ^String ?pathElem 'jar')]]''',
   System.getProperties());
      
