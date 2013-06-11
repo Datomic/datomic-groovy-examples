@@ -1,3 +1,4 @@
+import datomic.Peer;
 import static datomic.Peer.*;
 import static datomic.Connection.*;
 import static datomic.Util.*;
