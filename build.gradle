@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.datomic:datomic-free:0.8.3971'
+    compile 'com.datomic:datomic-free:0.8.4007'
 }
 
 task(classpath) {
