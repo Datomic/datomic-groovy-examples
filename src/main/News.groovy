@@ -33,7 +33,7 @@ class News {
     def conn = Peer.connect(uri);
     Peer.classLoader.getResource('day-of-datomic.edn').withReader {
       Util.readAll(it).each { tx ->
-        conn.transact(tx);
+        conn.transact(tx).get();
       }
     }
     4.times {
