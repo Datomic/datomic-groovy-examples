@@ -18,6 +18,46 @@
   :db/cardinality :db.cardinality/one
   :db.install/_attribute :db.part/db}]
 
+;; products and orders
+[{:db/id #db/id[:db.part/db]
+  :db/ident :user/orders
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :orderSystem/note
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db} 
+ {:db/id #db/id[:db.part/db]
+  :db/ident :order/lineItems
+  :db/isComponent true
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :lineItem/product
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :lineItem/price
+  :db/valueType :db.type/bigdec
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :lineItem/quantity
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+ {:db/id #db/id[:db.part/db]
+  :db/ident :product/description
+  :db/valueType :db.type/string
+  :db/fulltext true
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}]
+
 ;; comments
 [{:db/id #db/id[:db.part/db]
   :db/ident :comments
