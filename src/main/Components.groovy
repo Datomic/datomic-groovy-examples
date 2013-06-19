@@ -47,22 +47,22 @@ qe = { query, db, Object[] more ->
 }
 
 // lookup the order we just made
-chocolateOrder = qe(ordersByProductQuery, db, 'Expensive Chocolate');                                 
+order = qe(ordersByProductQuery, db, 'Expensive Chocolate');                                 
 
 // will recursively touch line items, but not products
-chocolateOrder.touch();
+order.touch();
 
 // meh, cancel that order
-conn.transact([[":db.fn/retractEntity", chocolateOrder[":db/id"]]]).get();
+conn.transact([[":db.fn/retractEntity", order[":db/id"]]]).get();
 
 db = conn.db();
 
 // all the line items are now gone
-q('''[:find ?e
+q('''[:find (count ?e)
       :where [?e :order/lineItems]]''',
-  db).size();
+  db);
 
 // but the products remain
-q('''[:find ?e
+q('''[:find (count ?e)
       :where [?e :product/description]]''',
-  db).size();
+  db);
