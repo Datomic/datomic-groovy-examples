@@ -1,0 +1,5 @@
+cd `dirname $0`/..
+
+echo "Configuring classpath to bin/classpath"
+gradle -q classpath >bin/classpath
+

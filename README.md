@@ -5,9 +5,16 @@
 * Install [Groovy](http://groovy.codehaus.org/)
 * Install [Gradle](http://www.gradle.org/)
 
+Setup the classpath.
+
+    bin/setup
+
+You will need to re-run `bin/setup` if the classpath changes,
+e.g. when Datomic or Groovy version changes.
+
 ## Usage
 
-Run the project local groovysh launcher
+Run the project-local groovysh launcher
 
     bin/groovy.sh
 
