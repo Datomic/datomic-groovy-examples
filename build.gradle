@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-  compile group: "com.datomic", name: "datomic-free", version: "0.8.4260" 
+  compile group: "com.datomic", name: "datomic-free", version: "0.9.4766" 
 
   // groovy-all + groovy shell broken in many early 2.x builds
   // will be fixed in 2.1.9 and 2.2.1, see http://jira.codehaus.org/browse/GROOVY-6426
