@@ -6,7 +6,6 @@ import datomic.Util;
 
 uri = 'datomic:free://localhost:4334/correcting-errors-example';
 createDatabase(uri);
-deleteDatabase(uri);
 conn = Peer.connect(uri);
 Peer.classLoader.getResource('inventory.edn').withReader {
   Util.readAll(it).each { tx ->
