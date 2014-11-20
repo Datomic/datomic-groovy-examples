@@ -1,11 +1,11 @@
 import datomic.Peer;
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
 conn = News.newTutorialConnection();
 dbval = conn.db();
 
-allStories = Peer.q('[:find ?e :where [?e :story/url]]', dbval).collect {
-  dbval.entity(it[0]);
+allStories = query('[:find [?e ...] :where [?e :story/url]]', dbval).collect {
+  dbval.entity(it);
 }
 
 tempid = { Peer.tempid(':db.part/user') }
@@ -30,55 +30,49 @@ changeNameResult = conn.transact([[':user/email': 'john@example.com',
                                    ':db/id': tempid(),
                                    ':user/firstName': 'Johnathan']]).get();
 
-// qe = query for entity
-qe = { query, db, Object[] more ->
-  db.entity(q(query, db, *more)[0][0])
-}
 
+// find the user we just transacted
 dbval = conn.db();
-john = qe('''[:find ?e
-             :in $ ?email
-             :where [?e :user/email ?email]]''',
-          dbval,
-          'john@example.com');
+john_id = query('''[:find ?e .
+                   :in $ ?email
+                   :where [?e :user/email ?email]]''',
+                dbval,
+                'john@example.com');
 
+johnUpvotesGraham_id = query('''[:find ?story .
+                                 :in $ ?user ?title
+                                 :where [?user :user/upVotes ?story]
+                                        [?story :story/url ?title]]''',
+                             dbval,
+                             john_id,
+                             'http://www.paulgraham.com/avg.html');
 
-johnUpvotesGraham = qe('''[:find ?story
-                           :in $ ?user ?title
-                           :where [?user :user/upVotes ?story]
-                                  [?story :story/url ?title]]''',
-                       dbval,
-                       john[':db/id'],
-                       'http://www.paulgraham.com/avg.html');
+johnUpvotesGraham = dbval.entity(johnUpvotesGraham_id)
 
 //retract that upvote
 conn.transact([[':db/retract', 
-                john[':db/id'], 
+                john_id, 
                 ':user/upVotes',
                 johnUpvotesGraham.get(':db/id')]]).get();
 
 // get more recent view of John
-john = conn.db().entity(john[':db/id']);
+john = conn.db().entity(john_id);
 
 // now only two upvotes
-john[':user/upVotes'];
+john.get(':user/upVotes')
 
 // prepare to retract all John's upvotes
 // use a query to make transaction data
-retractUpvotes = q('''[:find ?op ?e ?a ?v
-                       :in $ ?op ?e ?a
-                       :where [?e ?a ?v]]''',
-                   conn.db(),
-                   ':db/retract',
-                   john[':db/id'],
-                   ':user/upVotes');
+retractUpvotes = query('''[:find ?op ?e ?a ?v
+                           :in $ ?op ?e ?a
+                           :where [?e ?a ?v]]''',
+                       conn.db(),
+                       ':db/retract',
+                       john_id,
+                       ':user/upVotes');
 
 // retract the upvotes
 conn.transact(retractUpvotes.asList()).get();
 
 // and now they are gone
-john = conn.db().entity(john[':db/id'])[':user/upVotes'];
-
-
-
-
+john = conn.db().entity(john_id)[':user/upVotes'];

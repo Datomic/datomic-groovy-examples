@@ -1,5 +1,5 @@
 // inspired by http://www.lshift.net/blog/2010/08/21/some-relational-algebra-with-datatypes-in-clojure-12
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
 tuplify = { instance,fields ->
   fields.collect {instance[it]};
@@ -25,18 +25,18 @@ shipments = [new Shipment(supplier:'S1', part:'P1', quantity:300),
              new Shipment(supplier:'S2', part:'P3', quantity:400)];
 
 // parameterized query
-q('''[:find ?name
-      :in $ ?city
-      :where [?city ?name]]''',
-  beansToRelation(suppliers, ['city', 'name']),
-  'Paris');
+query('''[:find [?name ...]
+          :in $ ?city
+          :where [?city ?name]]''',
+      beansToRelation(suppliers, ['city', 'name']),
+      'Paris');
 
 // query with cross-'database' join
-q('''[:find ?name
-      :in $suppliers $shipments 
-      :where [$suppliers ?sup ?name ?city]
-             [$shipments ?sup]]''',
-  beansToRelation(suppliers, ['number', 'name', 'city']),
-  beansToRelation(shipments, ['supplier']),
-  'Paris');
+query('''[:find [?name ...]
+          :in $suppliers $shipments 
+          :where [$suppliers ?sup ?name ?city]
+                 [$shipments ?sup]]''',
+      beansToRelation(suppliers, ['number', 'name', 'city']),
+      beansToRelation(shipments, ['supplier']),
+      'Paris');
 

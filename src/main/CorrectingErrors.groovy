@@ -28,22 +28,22 @@ db = conn.db();
 db.entity([':item/id', '0042-TRBL']).touch();
 
 // individual datoms
-q('''[:find ?a ?v ?tx ?added
-      :in $ ?e
-      :where [?e ?a ?v ?tx ?added]]''',
+query('''[:find ?a ?v ?tx ?added
+          :in $ ?e
+          :where [?e ?a ?v ?tx ?added]]''',
   db,
   [':item/id', '0042-TRBL']);
 
 // find the most recent transaction
 log = conn.log();
-q('''[:find ?e ?aname ?v ?tx ?added
-      :in $ ?log ?tx
-      :where [(tx-data ?log ?tx) [[?e ?a ?v _ ?added]]]
-             [(not= ?e ?tx)]
-             [?a :db/ident ?aname]]''',
-  db,
-  log,
-  db.basisT());
+query('''[:find ?e ?aname ?v ?tx ?added
+          :in $ ?log ?tx
+          :where [(tx-data ?log ?tx) [[?e ?a ?v _ ?added]]]
+                 [(not= ?e ?tx)]
+                 [?a :db/ident ?aname]]''',
+      db,
+      log,
+      db.basisT());
 
 // error correction example 1:
 // correct a single datom, without attribution
@@ -62,27 +62,25 @@ conn.transact(retractTribbles).get();
 
 hist = conn.db().history();
 // history of tribbles
-q('''[:find ?a ?v ?tx ?added
-      :in $ ?e
-      :where [?e ?a ?v ?tx ?added]]''',
-  hist,
-  [':item/id', '0042-TRBL']);
+query('''[:find ?a ?v ?tx ?added
+          :in $ ?e
+          :where [?e ?a ?v ?tx ?added]]''',
+      hist,
+      [':item/id', '0042-TRBL']);
 
 // correction txes by jdoe
-jdoeTxes = q('''[:find ?tx
-                 :in $ ?e
-                 :where [?tx :corrected/by ?e]]''',
-             hist,
-             [':manager/email', 'jdoe@example.com']);
+jdoeTxes = query('''[:find ?tx
+                     :in $ ?e
+                     :where [?tx :corrected/by ?e]]''',
+                 hist,
+                 [':manager/email', 'jdoe@example.com']);
 
 // exact datoms corrected
-q('''[:find ?e ?aname ?v ?tx ?added
-      :in $ ?log [[?tx]]
-      :where [(tx-data ?log ?tx) [[?e ?a ?v _ ?added]]]
-             [(not= ?e ?tx)]
-             [?a :db/ident ?aname]]''',
-  hist,
-  log,
-  jdoeTxes);
-
-
+query('''[:find ?e ?aname ?v ?tx ?added
+          :in $ ?log [[?tx]]
+          :where [(tx-data ?log ?tx) [[?e ?a ?v _ ?added]]]
+                 [(not= ?e ?tx)]
+                 [?a :db/ident ?aname]]''',
+      hist,
+      log,
+      jdoeTxes);

@@ -1,22 +1,22 @@
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
 // bind vars
-q('''[:find ?first ?last
-      :in ?first ?last]''',
-  'John', 'Doe');
+query('''[:find ?first ?last
+          :in ?first ?last]''',
+      'John', 'Doe');
 
 // bind tuples
-q('''[:find ?first ?last
-      :in [?first ?last]]''',
-  ['John', 'Doe']);
+query('''[:find ?first ?last
+          :in [?first ?last]]''',
+      ['John', 'Doe']);
 
 // bind a collection
-q('''[:find ?first
-      :in [?first ...]]''',
-  ['John', 'Jane', 'Phineas']);
+query('''[:find [?first ...]
+          :in [?first ...]]''',
+      ['John', 'Jane', 'Phineas']);
 
 // bind a relation
-q('''[:find ?first
+query('''[:find [?first ...]
       :in [[?first ?last]]]''',
   [['John', 'Doe'],
    ['Jane', 'Doe']]);
@@ -24,7 +24,7 @@ q('''[:find ?first
 r = datomic.Util.&read;
 
 // bind a 'database'
-q('''[:find ?first
+query('''[:find [?first ...]
       :where [_ :first-name ?first]]''',
   [[42, r(':first-name'), 'John'],
    [42, r(':last-name'), 'Doe'],

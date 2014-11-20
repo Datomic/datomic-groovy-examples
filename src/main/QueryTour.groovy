@@ -7,56 +7,68 @@ conn = News.newTutorialConnection();
 
 db = conn.db();
 
-q('[:find ?e :where [?e :user/email]]', db);                
+query('[:find ?e :where [?e :user/email]]', db);
+query('[:find [?e ...] :where [?e :user/email]]', db);
 
 // bind a single query input
-q('''[:find ?e
-      :in $ ?email
-      :where [?e :user/email ?email]]''',
-  db, 'editor@example.com');
+query('''[:find ?e
+          :in $ ?email
+          :where [?e :user/email ?email]]''',
+      db, 'editor@example.com');
 
 // collection binding form
-q('''[:find ?e
-      :in $ [?email ...]
-      :where [?e :user/email ?email]]''',
-  db, ['editor@example.com', 'stuarthalloway@datomic.com']);
+query('''[:find ?e
+          :in $ [?email ...]
+          :where [?e :user/email ?email]]''',
+      db, ['editor@example.com', 'stuarthalloway@datomic.com']);
+
+// specify a collection of emails returned
+query('''[:find [?email ...]
+          :in $ ?email
+          :where [?e :user/email ?email]]''',
+      db, 'editor@example.com');
+
+// specify a single email returned
+query('''[:find ?email .
+          :in $ ?email
+          :where [?e :user/email ?email]]''',
+      db, 'editor@example.com');
 
 // join
-q('''[:find ?comment
-      :in $ ?email
-      :where [?user :user/email ?email]
-             [?comment :comment/author ?user]]''',
-  db, 'editor@example.com')
+query('''[:find [?comment ...]
+          :in $ ?email
+          :where [?user :user/email ?email]
+                 [?comment :comment/author ?user]]''',
+      db, 'editor@example.com')
 
 // aggregration
-q('''[:find (count ?comment)
-       :in $ ?email
-       :where [?user :user/email ?email]
-              [?comment :comment/author ?user]]''',
-  db, 'editor@example.com')
-
+query('''[:find (count ?comment)
+           :in $ ?email
+           :where [?user :user/email ?email]
+                  [?comment :comment/author ?user]]''',
+      db, 'editor@example.com')
 
 // no results : there are no comments about people
-q('''[:find (count ?comment)
-       :where
-       [?comment :comment/author]
-       [?commentable :comments ?comment]
-       [?commentable :user/email]]''',
-  db)
+query('''[:find (count ?comment)
+           :where
+           [?comment :comment/author]
+           [?commentable :comments ?comment]
+           [?commentable :user/email]]''',
+      db)
 
 // schema query
-q('''[:find ?attr-name
-       :where
-       [?ref :comments]
-       [?ref ?attr]
-       [?attr :db/ident ?attr-name]]''',
-  db)
+query('''[:find [?attr-name ...]
+           :where
+           [?ref :comments]
+           [?ref ?attr]
+           [?attr :db/ident ?attr-name]]''',
+      db)
 
 // entity API
-editorId = q('''[:find ?e
-                 :in $ ?email
-                 :where [?e :user/email ?email]]''',
-             db, 'editor@example.com').first().first();
+editorId = query('''[:find ?e .
+                     :in $ ?email
+                     :where [?e :user/email ?email]]''',
+                 db, 'editor@example.com')
 editor = db.entity(editorId)             
 
 editor.keySet()
@@ -65,10 +77,10 @@ editor.get(':comment/_author')
 editor.get(':comment/_author')*.get(':comments')
 
 // reified transactions
-txId = q('''[:find ?tx
-                :in $ ?e
-                :where [?e :user/firstName _ ?tx]]''',
-         db, editorId).first().first();
+txId = query('''[:find ?tx .
+                    :in $ ?e
+                    :where [?e :user/firstName _ ?tx]]''',
+             db, editorId)
 
 Peer.toT(txId);
 
@@ -90,5 +102,3 @@ q('''[:find ?tx ?v ?op ?date
   ':user/firstName').sort { a,b -> 
     a[0] <=> b[0] 
 }.each { println it}
-
-

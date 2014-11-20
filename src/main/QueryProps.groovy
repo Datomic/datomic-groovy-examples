@@ -1,12 +1,12 @@
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
-q('''[:find ?k ?v
-      :where [(System/getProperties) [[?k ?v]]]]''');
+query('''[:find ?k ?v
+          :where [(System/getProperties) [[?k ?v]]]]''');
 
-q('''[:find ?k ?v
-      :where [(System/getProperties) [[?k ?v]]]
-             [(.endsWith ?k "path")]]''');
+query('''[:find ?k ?v
+          :where [(System/getProperties) [[?k ?v]]]
+                 [(.endsWith ?k "path")]]''');
 
-q('''[:find ?k ?v
-      :where [(System/getProperties) [[?k ?v]]]
-             [(.endsWith ^String ?k "path")]]''');
+query('''[:find ?k ?v
+          :where [(System/getProperties) [[?k ?v]]]
+                 [(.endsWith ^String ?k "path")]]''');

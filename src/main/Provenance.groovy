@@ -6,11 +6,11 @@ import static datomic.Util.*;
 conn = News.newTutorialConnection();
 db = conn.db();
 
-stuId = q('''[:find ?e 
-              :in $ ?email
-              :where [?e :user/email ?email]]''', 
-          db,
-          'stuarthalloway@datomic.com')[0][0];               
+stuId = query('''[:find ?e .
+                  :in $ ?email
+                  :where [?e :user/email ?email]]''', 
+              db,
+              'stuarthalloway@datomic.com');
 
 ecURL = "http://blog.datomic.com/2012/09/elasticache-in-5-minutes.html";
 
@@ -30,11 +30,11 @@ tx = db.entity(Peer.toTx(t));
 // wall clock time of tx
 inst = tx[":db/txInstant"]
 
-editorId = q('''[:find ?e 
+editorId = query('''[:find ?e .
               :in $ ?email
               :where [?e :user/email ?email]]''', 
              db,
-             'editor@example.com')[0][0];               
+             'editor@example.com');               
 
 // fix spelling error in title
 conn.transact([[":db/id": tempid(":db.part/user"),
@@ -44,47 +44,45 @@ conn.transact([[":db/id": tempid(":db.part/user"),
                 ":source/user": editorId]]);
 
 // what is the title now?
-q('''[:find ?v
-      :in $ ?url
-      :where [?e :story/title ?v]
-             [?e :story/url ?url]]''',
-  conn.db(), ecURL);
+query('''[:find ?v .
+          :in $ ?url
+          :where [?e :story/title ?v]
+                 [?e :story/url ?url]]''',
+      conn.db(), ecURL);
 
 // what was the title earlier?
-q('''[:find ?v
-      :in $ ?url
-      :where [?e :story/title ?v]
-             [?e :story/url ?url]]''',
-  conn.db().asOf(inst), ecURL);
+query('''[:find ?v .
+          :in $ ?url
+          :where [?e :story/title ?v]
+                 [?e :story/url ?url]]''',
+      conn.db().asOf(inst), ecURL);
 
 // who changed the title, and when?
-q('''[:find ?e ?v ?email ?inst ?added
-      :in $ ?url
-      :where
-      [?e :story/title ?v ?tx ?added]
-      [?e :story/url ?url]
-      [?tx :source/user ?user]
-      [?tx :db/txInstant ?inst]
-      [?user :user/email ?email]]''',
-  conn.db().history(),
-  ecURL).sort {a,b ->
-    a[3] <=> b[3]
-}
+query('''[:find ?e ?v ?email ?inst ?added
+          :in $ ?url
+          :where
+          [?e :story/title ?v ?tx ?added]
+          [?e :story/url ?url]
+          [?tx :source/user ?user]
+          [?tx :db/txInstant ?inst]
+          [?user :user/email ?email]]''',
+      conn.db().history(),
+      ecURL).sort {a,b ->
+        a[3] <=> b[3]
+    }
 
-storyId = q('''[:find ?e
-                :in $ ?url
-                :where [?e :story/url ?url]]''',
-            conn.db(), ecURL)[0][0];
+storyId = query('''[:find ?e .
+                    :in $ ?url
+                    :where [?e :story/url ?url]]''',
+                conn.db(), ecURL);
 
-q('''[:find ?aname ?v ?tx ?inst ?added
-      :in $ ?e
-      :where
-      [?e ?a ?v ?tx ?added]
-      [?a :db/ident ?aname]
-      [?tx :db/txInstant ?inst]]''',
-  conn.db().history(),
-  storyId).sort {a,b ->
-    a[2] <=> b[2]
-}
-  
-                
+query('''[:find ?aname ?v ?tx ?inst ?added
+          :in $ ?e
+          :where
+          [?e ?a ?v ?tx ?added]
+          [?a :db/ident ?aname]
+          [?tx :db/txInstant ?inst]]''',
+      conn.db().history(),
+      storyId).sort {a,b ->
+        a[2] <=> b[2]
+    }

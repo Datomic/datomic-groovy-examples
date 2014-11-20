@@ -1,23 +1,24 @@
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
-q('[:find ?k :in [[?k]]]',
-  System.getProperties());
+props = System.getProperties()
 
-q('''[:find ?k 
-      :in [[?k ?v]]
-      :where [(.endsWith ^String ?k 'path')]]''',
-  System.getProperties());
+query('[:find [?k ...] :in [[?k]]]',
+      props);
 
-q('''[:find ?pathElem 
-      :in [[?k ?v]]
-      :where [(.endsWith ^String ?k 'path')]
-             [(.split ^String ?v ':') [?pathElem ...]]]''',
-  System.getProperties());
+query('''[:find [?k ...] 
+          :in [[?k ?v]]
+          :where [(.endsWith ^String ?k "path")]]''',
+      props);
 
-q('''[:find ?pathElem 
-      :in [[?k ?v]]
-      :where [(.endsWith ^String ?k 'path')]
-             [(.split ^String ?v ':') [?pathElem ...]]
-             [(.endsWith ^String ?pathElem 'jar')]]''',
-  System.getProperties());
-     
+query('''[:find ?pathElem 
+          :in [[?k ?v]]
+          :where [(.endsWith ^String ?k "path")]
+                 [(.split ^String ?v ":") [?pathElem ...]]]''',
+      props);
+
+query('''[:find ?pathElem 
+          :in [[?k ?v]]
+          :where [(.endsWith ^String ?k "path")]
+                 [(.split ^String ?v ":") [?pathElem ...]]
+                 [(.endsWith ^String ?pathElem "jar")]]''',
+      props);

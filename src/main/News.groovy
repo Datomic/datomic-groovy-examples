@@ -7,10 +7,10 @@ class News {
     datomic.query.EntityMap.metaClass.getAt {String k -> delegate.get(k) }
   }
   static findAll(db, attr) {
-    Peer.q('[:find ?e :in $ ?attr :where [?e ?attr]]', db, attr)*.get(0);                
+    Peer.query('[:find [?e ...] :in $ ?attr :where [?e ?attr]]', db, attr)
   }
-  static randNth(coll) {
-    coll.empty ? null : coll[(rnd.nextInt(coll.size))];
+  static randNth(cljvec) {
+    cljvec.empty ? null : cljvec[(rnd.nextInt(cljvec.cnt))];
   }
   static generateComments(db, n) {
     def storyIds = findAll(db, ':story/url');

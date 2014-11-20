@@ -11,13 +11,13 @@ txresult.get();
 
 dbval = conn.db();
 
-qresult = Peer.q('''[:find ?e
-                     :in $ ?str
-                     :where [?e :db/doc ?str]]''',
-                 dbval,
-                 'Hello world');
+qresult = Peer.query('''[:find [?e ...]
+                         :in $ ?str
+                         :where [?e :db/doc ?str]]''',
+                     dbval,
+                     'Hello world');
 
-ent = dbval.entity(qresult[0][0]);
+ent = dbval.entity(qresult[0]);
 ent.touch();
 
 docEnt = dbval.entity(':db/doc');
