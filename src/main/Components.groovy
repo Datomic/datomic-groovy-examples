@@ -1,5 +1,5 @@
 import datomic.Peer;
-import static datomic.Peer.q;
+import static datomic.Peer.query;
 
 conn = News.newTutorialConnection();
 dbval = conn.db();
@@ -15,12 +15,12 @@ products = ['Expensive Chocolate', 'Cheap Whisky'].collect {
 
 conn.transact(products).get();
 
-productQuery = '''[:find ?e
+productQuery = '''[:find [?e ...]
                    :in $ ?v
                    :where [?e :product/description ?v]]''';
 
 (chocolate, whisky) = ['Expensive Chocolate', 'Cheap Whisky'].collect {
-  q(productQuery, conn.db(), it)[0][0];
+  query(productQuery, conn.db(), it).get(0);
 }
 
 order = [['order/lineItems': [['lineItem/product': chocolate,
@@ -35,19 +35,19 @@ order = [['order/lineItems': [['lineItem/product': chocolate,
 conn.transact(order).get();
 
 db = conn.db();
-ordersByProductQuery = '''[:find ?e
+ordersByProductQuery = '''[:find [?e ...]
                            :in $ ?productDesc
                            :where [?e :order/lineItems ?item]
                                   [?item :lineItem/product ?prod]
                                   [?prod :product/description ?productDesc]]''';
 
-// qe = query for entity, finds first matching entity
-qe = { query, db, Object[] more ->
-  db.entity(q(query, db, *more)[0][0])
+// qfirste = query for first entity, finds first matching entity
+qfirste = { q, db, Object[] more ->
+  db.entity(query(q, db, *more).get(0))
 }
 
 // lookup the order we just made
-order = qe(ordersByProductQuery, db, 'Expensive Chocolate');                                 
+order = qfirste(ordersByProductQuery, db, 'Expensive Chocolate');                                 
 
 // will recursively touch line items, but not products
 order.touch();
@@ -58,11 +58,11 @@ conn.transact([[":db.fn/retractEntity", order[":db/id"]]]).get();
 db = conn.db();
 
 // all the line items are now gone
-q('''[:find (count ?e)
-      :where [?e :order/lineItems]]''',
-  db);
+query('''[:find (count ?e)
+          :where [?e :order/lineItems]]''',
+      db);
 
 // but the products remain
-q('''[:find (count ?e)
-      :where [?e :product/description]]''',
-  db);
+query('''[:find (count ?e)
+          :where [?e :product/description]]''',
+      db);
