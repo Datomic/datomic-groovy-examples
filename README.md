@@ -29,6 +29,12 @@ For specific feedback on the examples, please create an
 For questions about Datomic, try the [public mailing
 list](http://groups.google.com/group/datomic).
 
+## Contributing
+
+This library is developed internally by Cognitect. Issues can be filed using
+[Github Issues](https://github.com/Datomic/datomic-groovy-examples/issues). We do
+not accept pull request or patches.
+
 ## Related Projects
 
 * [Day of Datomic](https://github.com/Datomic/day-of-datomic) Clojure Examples
