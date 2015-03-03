@@ -47,7 +47,7 @@ qfirste = { q, db, Object[] more ->
 }
 
 // lookup the order we just made
-order = qfirste(ordersByProductQuery, db, 'Expensive Chocolate');                                 
+order = qfirste(ordersByProductQuery, db, 'Expensive Chocolate');
 
 // will recursively touch line items, but not products
 order.touch();
