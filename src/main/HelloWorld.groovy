@@ -4,7 +4,7 @@ uri = 'datomic:mem://hello';
 Peer.createDatabase(uri);
 conn = Peer.connect(uri);
 
-tempid = { Peer.tempid('db.part/user') }
+tempid = { Peer.tempid(':db.part/user') }
 
 txresult = conn.transact([[':db/add', tempid(), ':db/doc', 'Hello world']]);
 txresult.get();

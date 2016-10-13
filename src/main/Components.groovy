@@ -23,14 +23,14 @@ productQuery = '''[:find [?e ...]
   query(productQuery, conn.db(), it).get(0);
 }
 
-order = [['order/lineItems': [['lineItem/product': chocolate,
-                               'lineItem/quantity': 1,
-                               'lineItem/price': 48.00,
-                               'orderSystem/note': 'please send original packaging'],
-                              ['lineItem/product': whisky,
-                               'lineItem/quantity': 2,
-                               'lineItem/price': 38.00]],
-          'db/id': tempid()]];
+order = [[':order/lineItems': [[':lineItem/product': chocolate,
+                               ':lineItem/quantity': 1,
+                               ':lineItem/price': 48.00,
+                               ':orderSystem/note': 'please send original packaging'],
+                              [':lineItem/product': whisky,
+                               ':lineItem/quantity': 2,
+                               ':lineItem/price': 38.00]],
+          ':db/id': tempid()]];
 
 conn.transact(order).get();
 

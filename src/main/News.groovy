@@ -18,7 +18,7 @@ class News {
     def commentIds = findAll(db, ':comment/author');
     (0..<n).collect {
       def parentId = randNth(commentIds) ?: randNth(storyIds);
-      def commentId = Peer.tempid('db.part/user');
+      def commentId = Peer.tempid(':db.part/user');
       [[':db/add', parentId, ':comments', commentId],
        [':db/add', commentId, ':comment/author', randNth(userIds)],
        [':db/add', commentId, ':comment/body', 'blah']]
