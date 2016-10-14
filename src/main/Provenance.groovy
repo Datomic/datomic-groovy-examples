@@ -17,7 +17,7 @@ ecURL = "http://blog.datomic.com/2012/09/elasticache-in-5-minutes.html";
 result = conn.transact([[":db/id": tempid(":db.part/user"),
                          ":story/title": "ElastiCache in 6 minutes",
                          ":story/url": ecURL],
-                        [":db/id": tempid("db.part/user"),
+                        [":db/id": tempid(":db.part/user"),
                          ":story/title": "Keep Chocolate Love Atomic",
                          ":story/url": "http://blog.datomic.com/2012/08/atomic-chocolate.html"],
                         [":db/id": tempid(":db.part/tx"),
