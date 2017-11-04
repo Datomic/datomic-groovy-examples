@@ -2,7 +2,7 @@
 
 ## Setup
 
-* Install [Groovy](http://groovy.codehaus.org/)
+* Install [Groovy](http://groovy-lang.org/)
 * Install [Gradle](http://www.gradle.org/)
 
 Setup the classpath.
